@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>XSTK·AI — Xác suất thống kê, nhìn thấy được</title>
+<meta name="description" content="Gia sư AI môn Xác suất Thống kê: chấm bài bằng ảnh/PDF, luyện tập, vấn đáp, sơ đồ tư duy, hồ sơ học tập.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<style>
+:root{--bg:#f6f3ea;--ink:#1b1e2b;--mut:#666b7c;--card:#fffefb;--ln:#e7e2d3;--b:#3f5bd8;--a:#d97a1f;--t:#1a8f77;--r:#cf4b47;--e:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box}html{scroll-padding-top:90px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 'Be Vietnam Pro',system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(40vw 40vw at 90% -5%,#dfe5ff88,transparent),radial-gradient(35vw 35vw at -5% 40%,#ffe6c866,transparent)}
+h1,h2,h3{font-family:Newsreader,Georgia,serif;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:0}
+h1{font-size:clamp(2.4rem,6vw,4.4rem)}h2{font-size:clamp(1.7rem,3.5vw,2.4rem)}h3,h4{margin:0 0 .4rem}
+nav{position:sticky;top:calc(10px + env(safe-area-inset-top));z-index:5;margin:10px auto 0;width:max-content;max-width:calc(100% - 20px);display:flex;gap:4px;padding:5px;overflow-x:auto;background:#fffefbcc;backdrop-filter:blur(14px);border:1px solid var(--ln);border-radius:999px;box-shadow:0 10px 30px -14px #2b2f6a40}
+nav button{border:0;background:none;font:500 .92rem inherit;font-family:inherit;padding:10px 16px;border-radius:999px;color:var(--mut);cursor:pointer;white-space:nowrap;min-height:44px;transition:all .3s var(--e)}
+nav button[aria-selected=true]{background:var(--ink);color:#fff}
+main{max-width:1080px;margin:0 auto;padding:28px 18px 80px}
+.hero{display:grid;gap:28px;grid-template-columns:1.1fr .9fr;align-items:center;padding:34px 0 10px}
+.hero p{color:var(--mut);max-width:46ch;font-size:1.08rem}em{font-family:Newsreader,serif;color:var(--b)}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:22px;padding:22px;box-shadow:0 1px 0 #0000000a,0 18px 40px -22px #2b2f6a38;margin:16px 0}
+canvas{width:100%;height:190px;display:block}
+.v{animation:in .5s var(--e)}@keyframes in{from{opacity:0;transform:translateY(10px)}}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;align-items:center}
+.btn{border:0;border-radius:999px;padding:11px 20px;min-height:44px;font:500 .93rem 'Be Vietnam Pro',sans-serif;color:#fff;background:var(--ink);cursor:pointer;transition:transform .25s var(--e),opacity .2s}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:wait}
+.btn.h{background:var(--a)}.btn.g{background:var(--b)}.btn.s{background:var(--t)}.btn.o{background:none;color:var(--ink);border:1px solid var(--ln)}
+:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+textarea,select,input[type=text]{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--ln);border-radius:14px;background:#fff;color:var(--ink)}
+textarea{resize:vertical;min-height:90px}
+.tb{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+.sym{border:1px solid var(--ln);background:#fff;border-radius:9px;min-width:38px;min-height:34px;font-size:.9rem;cursor:pointer}.sym:hover{background:#eef1ff}
+.pv{min-height:1.5em;color:var(--mut);font-size:.95rem;padding:4px 2px}
+.out{margin-top:12px}.out:empty{display:none}
+.fb{background:#f3f6ff;border-radius:16px;padding:16px;border:1px solid #dfe5ff}
+.sc{display:inline-grid;place-items:center;min-width:64px;height:64px;border-radius:50%;background:var(--b);color:#fff;font:600 1.5rem Newsreader,serif;margin-right:12px;float:left}
+.ok{color:var(--t)}.no{color:var(--r)}.err{color:var(--r)}.lbl{color:var(--mut);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin:0}
+.q{font:1.25rem/1.5 Newsreader,serif}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:0 18px}
+.opt{display:flex;gap:10px;padding:10px 12px;border:1px solid var(--ln);border-radius:12px;margin:6px 0;cursor:pointer;min-height:44px;align-items:center}
+.opt:has(input:checked){border-color:var(--b);background:#eef1ff}
+.bar{display:grid;grid-template-columns:minmax(120px,1.4fr) 3fr 40px;gap:10px;align-items:center;margin:8px 0;font-size:.92rem}
+.bar i{height:10px;border-radius:9px;background:#ece8da;position:relative;overflow:hidden}.bar i::after{content:"";position:absolute;inset:0;width:var(--w);background:var(--b);border-radius:9px;transition:width 1s var(--e)}
+.mm{overflow:auto;border:1px solid var(--ln);border-radius:18px;background:#fff;max-height:70vh}.mm g{cursor:pointer}.mm text{font-family:'Be Vietnam Pro',sans-serif}
+[hidden]{display:none!important}.dots{color:var(--mut)}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.bar{grid-template-columns:1fr 40px}.bar i{grid-column:1/-1;order:3}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<nav role="tablist" aria-label="Chức năng">
+<button role="tab" data-v="home" aria-selected="true">Trang chủ</button><button role="tab" data-v="tutor">Gia sư AI</button><button role="tab" data-v="prac">Luyện tập</button><button role="tab" data-v="oral">Vấn đáp</button><button role="tab" data-v="map">Sơ đồ tư duy</button><button role="tab" data-v="prof">Hồ sơ</button></nav>
+<main>
+<section class="v" id="home">
+ <div class="hero"><div><p class="lbl">Xác suất &amp; Thống kê · AI</p><h1>Xác suất, <em>nhìn thấy</em> được.</h1>
+ <p>Chấm bài từ ảnh hoặc PDF, gợi ý chiến lược mà không lộ đáp án, vấn đáp lí thuyết và hồ sơ lỗi sai theo dõi tiến bộ của bạn.</p>
+ <div class="row"><button class="btn" data-go="tutor">Nộp bài để chấm</button><button class="btn o" data-go="oral">Thử vấn đáp</button></div></div>
+ <div class="card"><p class="lbl">Luật số lớn · tung đồng xu</p><canvas id="cv" role="img" aria-label="Biểu đồ tần suất mặt ngửa hội tụ về xác suất p"></canvas>
+ <div class="row"><label for="pp">p = <b id="pv">0,50</b></label><input id="pp" type="range" min=".1" max=".9" step=".05" value=".5" style="flex:1;min-width:120px"><button class="btn g" id="f10">Tung 10</button><button class="btn s" id="f500">Tung 500</button></div><p id="cs" class="pv"></p></div></div>
+ <div class="card"><h3>Quy trình học của hệ thống</h3><p>Giải toán theo 4 bước: <b>Tìm hiểu đề → Xây dựng chương trình giải → Trình bày → Kiểm tra &amp; mở rộng</b>. Học khái niệm và định lí theo: <b>Trải nghiệm → Hình thành → Củng cố → Vận dụng</b>.</p></div>
+</section>
+
+<section class="v" id="tutor" hidden><h2>Gia sư AI</h2>
+ <div class="card"><label class="lbl" for="pb">Đề bài (có thể để trống nếu đề nằm trong ảnh/PDF)</label><div id="pbw"></div>
+ <label class="lbl" for="wk">Bài làm của bạn (gõ tay)</label><div id="wkw"></div>
+ <label class="lbl" for="tf">Hoặc tải ảnh / PDF bài làm (AI đọc chữ viết tay)</label><input type="file" id="tf" accept="image/*,application/pdf">
+ <div class="row"><button class="btn h" data-do="thint" data-o="#tout">Chiến lược giải (không đáp án)</button><button class="btn g" data-do="tgrade" data-o="#tout">Chấm bài</button><button class="btn s" data-do="tsol" data-o="#tout">Xem bài giải chi tiết</button></div><div class="out" id="tout" aria-live="polite"></div></div></section>
+
+<section class="v" id="prac" hidden><h2>Luyện tập</h2>
+ <div class="card"><div class="row"><select id="ptopic" aria-label="Chủ đề" style="flex:1;min-width:200px"></select><button class="btn" data-do="gen" data-o="#pmsg">Tạo 5 trắc nghiệm + 5 tự luận</button></div><div id="pmsg" class="out"></div></div>
+ <h3>Trắc nghiệm</h3><div id="mcq" class="g2"></div><h3>Tự luận</h3><div id="essay" class="g2"></div></section>
+
+<section class="v" id="oral" hidden><h2>Vấn đáp lí thuyết</h2>
+ <div class="card"><div class="row"><select id="otopic" aria-label="Chủ đề" style="flex:1;min-width:200px"></select><button class="btn" data-do="ostart" data-o="#oout">Bắt đầu (5 câu)</button></div><div id="oout" class="out" aria-live="polite"></div></div></section>
+
+<section class="v" id="map" hidden><h2>Sơ đồ tư duy</h2>
+ <div class="card"><div class="row"><input type="text" id="mt" placeholder="Chủ đề, ví dụ: Xác suất có điều kiện" aria-label="Chủ đề sơ đồ" style="flex:1;min-width:200px"><button class="btn g" data-do="mm" data-o="#mmsg">Tạo bằng AI</button><button class="btn o" id="zi" aria-label="Phóng to">＋</button><button class="btn o" id="zo" aria-label="Thu nhỏ">－</button></div><div id="mmsg" class="out"></div>
+ <p class="pv">Chạm vào một nút để thu gọn hoặc mở rộng nhánh.</p><div class="mm" id="mmap"></div></div></section>
+
+<section class="v" id="prof" hidden><h2>Hồ sơ học tập</h2>
+ <div class="card" id="pf"></div><div class="row"><button class="btn g" data-do="pan" data-o="#pout">Phân tích lỗi &amp; đề xuất lộ trình</button><button class="btn o" id="rst">Xoá hồ sơ</button></div><div class="out card" id="pout"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const math=s=>String(s??'').split(/(\$\$[^$]+\$\$|\$[^$\n]+\$)/).map(p=>{const d=p.startsWith('$$');if(p.length>2&&p[0]=='$'&&window.katex)try{return katex.renderToString(p.slice(d?2:1,d?-2:-1),{displayMode:d,throwOnError:false})}catch{}return esc(p).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>')}).join('');
+const TOPICS=['Biến cố & xác suất','Xác suất có điều kiện & Bayes','Biến ngẫu nhiên rời rạc','Phân phối chuẩn & liên tục','Kì vọng & phương sai','Luật số lớn & CLT','Ước lượng & khoảng tin cậy','Kiểm định giả thuyết','Hồi quy & tương quan'];
+$('#ptopic').innerHTML=$('#otopic').innerHTML=TOPICS.map(t=>`<option>${t}</option>`).join('');
+const RULE='Bạn là gia sư Xác suất Thống kê. Dùng quy trình 4 bước: tìm hiểu đề, xây dựng chương trình giải, trình bày, kiểm tra/mở rộng. Công thức bằng LaTeX trong $...$. ';
+const GJ=`JSON: {"score":0-10,"topic":"một trong [${TOPICS.join('; ')}]","verdict":"nhận xét ngắn","steps":[{"step":"","ok":true,"comment":""}],"errors":["nhãn lỗi ngắn"],"advice":""}`;
+
+/* hồ sơ (localStorage, có bảo vệ lỗi) */
+const P={get(){try{return JSON.parse(localStorage.xstk)||{logs:[]}}catch{return{logs:[]}}},add(l){try{const s=P.get();s.logs=[...s.logs,{...l,t:Date.now()}].slice(-200);localStorage.xstk=JSON.stringify(s)}catch{}}};
+
+/* gọi AI qua máy chủ (khoá không bao giờ ở trình duyệt) */
+let last=0;
+async function ai(text,{files=[],json=0}={}){
+ const w=2500-(Date.now()-last);if(w>0)await new Promise(r=>setTimeout(r,w));last=Date.now();
+ const r=await fetch('/api/ai',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({parts:[{text},...files],json})});
+ const j=await r.json().catch(()=>({error:'Lỗi mạng, thử lại.'}));if(!r.ok)throw Error(j.error||'Lỗi máy chủ');
+ if(!json)return j.text;try{return JSON.parse(j.text.replace(/```json|```/g,'').trim())}catch{throw Error('AI trả về sai định dạng, hãy bấm lại.')}
+}
+const fp=async()=>{const f=$('#tf').files[0];if(!f)return[];
+ if(f.type.startsWith('image/')){const i=await createImageBitmap(f),s=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);return[{inline_data:{mime_type:'image/jpeg',data:c.toDataURL('image/jpeg',.85).split(',')[1]}}]}
+ if(f.size>4e6)throw Error('PDF quá lớn (tối đa 4MB).');
+ const d=await new Promise(r=>{const a=new FileReader;a.onload=()=>r(a.result.split(',')[1]);a.readAsDataURL(f)});return[{inline_data:{mime_type:f.type||'application/pdf',data:d}}]};
+
+/* ô nhập có phím tắt kí tự toán */
+const SY=[['√','$\\sqrt{}$'],['a/b','$\\frac{}{}$'],['x²','$^{2}$'],['xᵢ','$x_{i}$'],['x̄','$\\bar{x}$'],['∑','$\\sum_{i=1}^{n}$'],['≤','$\\le$'],['≥','$\\ge$'],['≠','$\\ne$'],['≈','$\\approx$'],['μ','$\\mu$'],['σ','$\\sigma$'],['λ','$\\lambda$'],['α','$\\alpha$'],['∩','$\\cap$'],['∪','$\\cup$'],['∈','$\\in$'],['∞','$\\infty$'],['C(n,k)','$\\binom{n}{k}$'],['P(A|B)','$P(A\\mid B)$'],['∫','$\\int_{a}^{b}$']];
+const mb=(id,rows=3,ph='Nhập văn bản; dùng nút bên dưới để chèn kí hiệu toán')=>`<div class="tb">${SY.map((s,i)=>`<button type="button" class="sym" data-i="${i}" data-t="${id}" aria-label="Chèn ${esc(s[0])}">${esc(s[0])}</button>`).join('')}</div><textarea id="${id}" rows="${rows}" placeholder="${ph}"></textarea><div class="pv" id="${id}-pv" aria-live="off"></div>`;
+$('#pbw').innerHTML=mb('pb');$('#wkw').innerHTML=mb('wk');
+document.addEventListener('input',e=>{if(e.target.matches('textarea')){const v=$('#'+e.target.id+'-pv');if(v)v.innerHTML=math(e.target.value)}});
+document.addEventListener('click',e=>{const b=e.target.closest('.sym');if(!b)return;const t=$('#'+b.dataset.t),s=SY[b.dataset.i][1],p=t.selectionStart;
+ t.value=t.value.slice(0,p)+s+t.value.slice(t.selectionEnd);const k=s.indexOf('{}');t.focus();t.selectionStart=t.selectionEnd=p+(k>0?k+1:s.length);t.dispatchEvent(new Event('input',{bubbles:true}))});
+
+/* hiển thị kết quả chấm */
+const grade=g=>`<div class="fb"><span class="sc">${esc(g.score)}</span><b>${math(g.verdict)}</b><div style="clear:both"></div><ul>${(g.steps||[]).map(s=>`<li class="${s.ok?'ok':'no'}">${s.ok?'✓':'✗'} <b>${math(s.step)}</b> — <span style="color:var(--ink)">${math(s.comment)}</span></li>`).join('')}</ul><p>${math(g.advice)}</p></div>`;
+const logG=(g,kind,topic)=>P.add({topic:TOPICS.includes(g.topic)?g.topic:topic||'Khác',kind,score:+g.score||0,errors:g.errors||[]});
+
+/* xử lí các nút */
+let Q={mcq:[],essay:[]},O={};
+const H={
+ async thint(){const t=$('#pb').value,f=await fp();if(!t&&!f.length)throw Error('Hãy nhập đề hoặc tải ảnh/PDF.');
+  return math(await ai(RULE+'Đề bài: '+t+'\nHãy đưa CHIẾN LƯỢC giải theo 4 bước (đã cho/cần tìm, kiến thức liên quan, các bước nên làm, cách kiểm tra). TUYỆT ĐỐI không nêu đáp án hay kết quả số, không giải hoàn chỉnh.',{files:f}))},
+ async tgrade(){const t=$('#pb').value,w=$('#wk').value,f=await fp();if(!w&&!f.length)throw Error('Hãy nhập bài làm hoặc tải ảnh/PDF.');
+  const g=await ai(RULE+`Đề: ${t||'(đọc từ tệp đính kèm)'}\nBài làm: ${w||'(đọc bằng OCR từ tệp đính kèm)'}\nChỉ CHẤM ĐIỂM từng bước bài làm, chỉ ra lỗi sai; không đưa lời giải hoàn chỉnh hay đáp án đúng. ${GJ}`,{files:f,json:1});logG(g,'tutor');return grade(g)},
+ async tsol(){const t=$('#pb').value,f=await fp();if(!t&&!f.length)throw Error('Hãy nhập đề hoặc tải ảnh/PDF.');
+  return math(await ai(RULE+'Đề: '+t+'\nViết bài giải chi tiết theo 4 bước, kèm bước kiểm tra kết quả và một cách giải khác nếu có.',{files:f}))},
+ async gen(){const t=$('#ptopic').value,r=await ai(RULE+`Chủ đề: ${t}. Tạo 5 câu trắc nghiệm (4 phương án, mức độ tăng dần) và 5 câu tự luận. JSON {"mcq":[{"q":"","options":["A","B","C","D"],"answer":"A|B|C|D","hint":"chiến lược, KHÔNG nêu đáp án","solution":"lời giải chi tiết","topic":"${t}"}],"essay":[{"q":"","hint":"chiến lược, KHÔNG nêu đáp án","solution":"","topic":"${t}"}]}. Nội dung chỉ dùng chữ cái đáp án A-D trong "answer", options không kèm "A.".`,{json:1});
+  Q={mcq:(r.mcq||[]).slice(0,5),essay:(r.essay||[]).slice(0,5)};
+  $('#mcq').innerHTML=Q.mcq.map((it,i)=>card('mcq',i,it)).join('');$('#essay').innerHTML=Q.essay.map((it,i)=>card('essay',i,it)).join('');return 'Đã tạo đề. Cuộn xuống để làm bài.'},
+ async ostart(){const t=$('#otopic').value;O={n:1,t,h:[]};const r=await ai(RULE+`Chủ đề: ${t}. Đặt 1 câu vấn đáp lí thuyết ngắn (khái niệm hoặc định lí). JSON {"question":""}`,{json:1});O.q=r.question;return oq()},
+ async osend(){const a=$('#oa').value.trim();if(!a)throw Error('Hãy nhập câu trả lời.');const end=O.n>=5;
+  const r=await ai(RULE+`Chủ đề ${O.t}. Câu hỏi: ${O.q}\nTrả lời: ${a}\nChấm 0-10, nêu lỗ hổng kiến thức và sai lầm. ${end?'Không đặt câu tiếp.':'Đặt câu mới khác: '+O.h.map(x=>x.q).join(' | ')} JSON {"score":0,"correct":"điều đúng","gaps":[""],"mistakes":[""],"model_answer":"","next_question":""}`,{json:1});
+  O.h.push({q:O.q,s:+r.score||0});P.add({topic:O.t,kind:'oral',score:+r.score||0,errors:[...(r.mistakes||[]),...(r.gaps||[])]});
+  const li=a=>(a||[]).map(x=>`<li>${math(x)}</li>`).join('');
+  let h=`<div class="fb"><span class="sc">${esc(r.score)}</span><b class="ok">${math(r.correct)}</b><div style="clear:both"></div><p class="lbl">Lỗ hổng kiến thức</p><ul>${li(r.gaps)}</ul><p class="lbl">Sai lầm</p><ul>${li(r.mistakes)}</ul><p class="lbl">Đáp án mẫu</p><p>${math(r.model_answer)}</p></div>`;
+  if(end){const m=O.h.reduce((a,x)=>a+x.s,0)/O.h.length;h+=`<p><b>Hoàn thành 5 câu. Điểm trung bình: ${m.toFixed(1)}/10.</b> Xem chi tiết ở mục Hồ sơ.</p>`}
+  else{O.n++;O.q=r.next_question;h+=`<div class="row"><button class="btn" data-do="onext" data-o="#oout">Câu tiếp theo</button></div>`}return h},
+ onext:()=>oq(),
+ async mm(){const t=$('#mt').value.trim();if(!t)throw Error('Hãy nhập chủ đề.');MM=await ai(RULE+`Tạo sơ đồ tư duy về "${t}". JSON đệ quy {"n":"tên ngắn tối đa 5 từ","c":[...]}, sâu tối đa 3 cấp, mỗi nút tối đa 6 con.`,{json:1});drawMap();return ''},
+ async pan(){const s=summ();if(!s)throw Error('Chưa có dữ liệu hồ sơ.');
+  return math(await ai(RULE+`Dữ liệu hồ sơ học tập (điểm TB theo chủ đề, các lỗi lặp lại): ${JSON.stringify(s)}\nNhận định các lỗi sai xuyên suốt, nguyên nhân có thể, rồi đề xuất lộ trình cải thiện 2 tuần (theo trình tự: trải nghiệm, củng cố, vận dụng), kèm chủ đề ưu tiên.`))}
+};
+const oq=()=>`<p class="lbl">Câu ${O.n}/5</p><p class="q">${math(O.q)}</p>${mb('oa',4,'Trả lời của bạn…')}<div class="row"><button class="btn g" data-do="osend" data-o="#ores">Gửi trả lời</button></div><div id="ores" class="out" aria-live="polite"></div>`;
+function card(k,i,it){return `<article class="card"><p class="lbl">Câu ${i+1}</p><p class="q">${math(it.q)}</p>${k=='mcq'?(it.options||[]).map((o,j)=>`<label class="opt"><input type="radio" name="m${i}" value="${'ABCD'[j]}"><span>${'ABCD'[j]}. ${math(o)}</span></label>`).join(''):mb('e'+i,4)}
+<div class="row"><button class="btn h" data-act="hint" data-k="${k}" data-i="${i}">Gợi ý chiến lược</button><button class="btn g" data-act="grade" data-k="${k}" data-i="${i}">Chấm bài</button><button class="btn s" data-act="sol" data-k="${k}" data-i="${i}">Hiện lời giải</button></div><div class="out" id="o-${k}${i}" aria-live="polite"></div></article>`}
+async function act(b){const{k,i,act:a}=b.dataset,it=Q[k][i],o=$(`#o-${k}${i}`);
+ if(a=='hint')return o.innerHTML=`<div class="fb">${math(it.hint)}</div>`;
+ if(a=='sol')return o.innerHTML=`<div class="fb">${math(it.solution)}</div>`;
+ if(k=='mcq'){const c=document.querySelector(`input[name=m${i}]:checked`);if(!c)return o.innerHTML='<p class="err">Hãy chọn một đáp án.</p>';const ok=c.value==it.answer;
+  P.add({topic:it.topic,kind:'mcq',score:ok?10:0,errors:ok?[]:['Sai trắc nghiệm: '+it.topic]});return o.innerHTML=ok?'<p class="ok"><b>✓ Chính xác!</b></p>':'<p class="no"><b>✗ Chưa đúng.</b> Hãy xem gợi ý rồi thử lại.</p>'}
+ const w=$('#e'+i).value.trim();if(!w)return o.innerHTML='<p class="err">Hãy nhập bài làm.</p>';
+ b.disabled=1;o.innerHTML='<span class="dots">Đang chấm…</span>';
+ try{const g=await ai(RULE+`Đề: ${it.q}\nLời giải tham chiếu (không tiết lộ): ${it.solution}\nBài làm: ${w}\nChỉ chấm điểm và chỉ ra lỗi, không đưa đáp án. ${GJ}`,{json:1});logG(g,'essay',it.topic);o.innerHTML=grade(g)}catch(e){o.innerHTML=`<p class="err">${esc(e.message)}</p>`}b.disabled=0}
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-do],[data-act]');if(!b)return;
+ if(b.dataset.act)return act(b);
+ const o=$(b.dataset.o);b.disabled=1;o.innerHTML='<span class="dots">Đang xử lí…</span>';
+ try{o.innerHTML=await H[b.dataset.do](b)}catch(er){o.innerHTML=`<p class="err">${esc(er.message)}</p>`}b.disabled=0});
+
+/* hồ sơ */
+function summ(){const L=P.get().logs;if(!L.length)return null;const by={},er={};
+ L.forEach(l=>{(by[l.topic]??=[]).push(l.score);(l.errors||[]).forEach(e=>er[e]=(er[e]||0)+1)});
+ return{lanLam:L.length,diemTB:+(L.reduce((a,l)=>a+l.score,0)/L.length).toFixed(1),theoChuDe:Object.fromEntries(Object.entries(by).map(([k,a])=>[k,+(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1)])),loiLap:Object.entries(er).sort((a,b)=>b[1]-a[1]).slice(0,8)}}
+function renderProf(){const s=summ();$('#pf').innerHTML=!s?'<p>Chưa có dữ liệu. Hãy làm bài ở Gia sư, Luyện tập hoặc Vấn đáp — mọi kết quả sẽ được lưu tại đây (trên thiết bị của bạn).</p>':
+ `<p><b>${s.lanLam}</b> lượt làm · điểm trung bình <b>${s.diemTB}/10</b></p>`+Object.entries(s.theoChuDe).map(([t,m])=>`<div class="bar"><span>${esc(t)}</span><i style="--w:${m*10}%"></i><b>${m}</b></div>`).join('')+
+ `<h3 style="margin-top:18px">Lỗi lặp lại nhiều nhất</h3><ol>${s.loiLap.map(([e,n])=>`<li>${math(e)} <span class="lbl">×${n}</span></li>`).join('')||'<li>Chưa có lỗi nào được ghi nhận.</li>'}</ol>`}
+$('#rst').onclick=()=>{if(confirm('Xoá toàn bộ hồ sơ học tập trên thiết bị này?')){try{localStorage.removeItem('xstk')}catch{}renderProf();$('#pout').innerHTML=''}};
+
+/* sơ đồ tư duy */
+let MM={n:'Xác suất & Thống kê',c:[{n:'Xác suất',c:[{n:'Biến cố'},{n:'Quy tắc cộng, nhân'},{n:'Xác suất có điều kiện',c:[{n:'Công thức Bayes'}]}]},{n:'Biến ngẫu nhiên',c:[{n:'Rời rạc',c:[{n:'Nhị thức'},{n:'Poisson'}]},{n:'Liên tục',c:[{n:'Chuẩn'},{n:'Đều'}]},{n:'Kì vọng, phương sai'}]},{n:'Định lí giới hạn',c:[{n:'Luật số lớn'},{n:'Giới hạn trung tâm'}]},{n:'Thống kê',c:[{n:'Mẫu & đặc trưng'},{n:'Khoảng tin cậy'},{n:'Kiểm định giả thuyết'},{n:'Hồi quy, tương quan'}]}]},Z=1;
+const kids=n=>n.off?[]:n.c||[];
+const wrap=s=>{const w=String(s).split(' '),L=[''];w.forEach(x=>{if((L.at(-1)+' '+x).trim().length>19&&L.at(-1))L.push(x);else L[L.length-1]=(L.at(-1)+' '+x).trim()});return L.slice(0,3)};
+function drawMap(){const COL=['#3f5bd8','#d97a1f','#1a8f77','#cf4b47','#8a5cd0','#2a9fc0'],all=[];let mx=0,my=0,s='';
+ const lay=(n,d)=>{n.d=d;kids(n).forEach(c=>lay(c,d+1));n.h=Math.max(1,kids(n).reduce((a,c)=>a+c.h,0))},pos=(n,y)=>{let t=y;kids(n).forEach(c=>{pos(c,t);t+=c.h});n.y=y+n.h/2};
+ lay(MM,0);pos(MM,0);
+ (function w(n,p,c){n.id=all.push(n)-1;n.x=n.d*215+10;n.cy=n.y*58;mx=Math.max(mx,n.x+175);my=Math.max(my,n.cy+30);
+  if(p){const x1=p.x+175,m=(x1+n.x)/2;s+=`<path d="M${x1} ${p.cy}C${m} ${p.cy} ${m} ${n.cy} ${n.x} ${n.cy}" fill="none" stroke="${c}" stroke-width="2" opacity=".5"/>`}
+  const L=wrap(n.n),col=p?c:'#1b1e2b';
+  s+=`<g data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.n)}"><rect x="${n.x}" y="${n.cy-21}" width="170" height="42" rx="14" fill="${p?'#fff':col}" stroke="${col}" stroke-width="1.6"/><text x="${n.x+85}" y="${n.cy+4-(L.length-1)*8}" text-anchor="middle" font-size="13" fill="${p?'#1b1e2b':'#fff'}">${L.map((t,i)=>`<tspan x="${n.x+85}" dy="${i?15:0}">${esc(t)}</tspan>`).join('')}</text>${(n.c||[]).length?`<circle cx="${n.x+170}" cy="${n.cy}" r="8" fill="${col}"/><text x="${n.x+170}" y="${n.cy+4}" text-anchor="middle" font-size="12" fill="#fff">${n.off?'+':'−'}</text>`:''}</g>`;
+  kids(n).forEach((k,i)=>w(k,n,p?c:COL[i%6]))})(MM,null,'');
+ const W=mx+30,Hh=my+20;$('#mmap').innerHTML=`<svg role="img" aria-label="Sơ đồ tư duy: ${esc(MM.n)}" viewBox="0 -30 ${W} ${Hh+30}" width="${W*Z}" height="${(Hh+30)*Z}">${s}</svg>`;
+ $('#mmap').onclick=$('#mmap').onkeydown=e=>{if(e.key&&e.key!='Enter')return;const g=e.target.closest('g[data-id]');if(!g)return;const n=all[g.dataset.id];if(n.c?.length){n.off=!n.off;drawMap()}}}
+$('#zi').onclick=()=>{Z=Math.min(2,Z+.2);drawMap()};$('#zo').onclick=()=>{Z=Math.max(.5,Z-.2);drawMap()};
+
+/* điều hướng */
+function go(v){$$('.v').forEach(s=>s.hidden=s.id!=v);$$('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v==v));if(v=='prof')renderProf();if(v=='home')draw();scrollTo({top:0})}
+$$('nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));$$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+/* minh hoạ: luật số lớn */
+const cv=$('#cv'),cx=cv.getContext('2d');let Hh=0,N=0,pts=[];
+function draw(){const d=devicePixelRatio||1,w=cv.width=cv.clientWidth*d,h=cv.height=cv.clientHeight*d;if(!w)return;const p=+$('#pp').value,X=Math.max(50,N),y=v=>h-12*d-v*(h-24*d);
+ cx.clearRect(0,0,w,h);cx.setLineDash([6*d,6*d]);cx.strokeStyle='#d97a1f';cx.lineWidth=1.5*d;cx.beginPath();cx.moveTo(0,y(p));cx.lineTo(w,y(p));cx.stroke();cx.setLineDash([]);
+ cx.strokeStyle='#3f5bd8';cx.lineWidth=2.2*d;cx.beginPath();pts.forEach((v,i)=>{const px=i/X*w;i?cx.lineTo(px,y(v)):cx.moveTo(px,y(v))});cx.stroke();
+ $('#cs').textContent=N?`Sau ${N} lần tung: tần suất ngửa = ${(Hh/N).toFixed(3).replace('.',',')} (p = ${p.toFixed(2).replace('.',',')})`:'Hãy tung đồng xu để thấy tần suất tiến dần về p.'}
+function flip(k){const p=+$('#pp').value;for(let i=0;i<k;i++){Math.random()<p&&Hh++;N++;pts.push(Hh/N)}draw()}
+$('#f10').onclick=()=>flip(10);$('#f500').onclick=()=>flip(500);
+$('#pp').oninput=e=>{Hh=N=0;pts=[];$('#pv').textContent=(+e.target.value).toFixed(2).replace('.',',');draw()};
+addEventListener('resize',draw);addEventListener('load',()=>{draw();drawMap()});
+</script></body></html>
